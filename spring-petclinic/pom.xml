@@ -7,7 +7,7 @@
 
 	<name>petclinic</name>
 
-	<packaging>zar</packaging>
+	<packaging>war</packaging>
 
 	<properties>
 
