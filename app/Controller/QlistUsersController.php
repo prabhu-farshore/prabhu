@@ -63,10 +63,10 @@ class QlistUsersController extends AppController {
         $responseFromBrainTree = $this->BraintreePayment->createCustomer($creditCardDetails, $billingAddress, $customer);
         
         $result['success'] = 0;
-        $result['message'] = "Thanks..! Payment transaction completed successfully.";
+        $result['message'] = "Please check your card details.";
         pr($result);exit;
-        if($responseFromBrainTree['success'] == 0){            
-            $result['message'] = "Please check your card details.";
+        if($responseFromBrainTree['success'] == 1){  
+            $result['message'] = "Thanks..! Payment transaction completed successfully.";        
         }
         $this->set(compact('result'));
         $this->render('default');
