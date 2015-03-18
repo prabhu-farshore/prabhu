@@ -112,3 +112,12 @@ CakeLog::config('error', array(
 	'types' => array('warning', 'error', 'critical', 'alert', 'emergency'),
 	'file' => 'error',
 ));
+
+
+/**** Brain tree configuration ****/
+$root = realpath($_SERVER["DOCUMENT_ROOT"]);
+include "$root/Q_wait_list/app/Vendor/braintree/lib/Braintree.php";
+Braintree_Configuration::environment('sandbox');
+Braintree_Configuration::merchantId('yzj3txx8gmf4cn2c');
+Braintree_Configuration::publicKey('2rw78gf8z8sfr4k4');
+Braintree_Configuration::privateKey('219b52201d1a05376ca0e2bc2e7034bc');
