@@ -31,11 +31,11 @@ class BraintreePaymentComponent extends Component {
     public function createCustomer($creditCardDetails, $billingAddress, $customer){
         $creditCardDetails['options'] = array('verifyCard'=>true);
 	/* Create a new user using the Brain tree Library function */
-	$response = Braintree_Customer::create(array('firstName' => mysql_real_escape_string($customer['first_name']),
-                                                     'lastName' => mysql_real_escape_string($customer['last_name']),
-                                                     'company' => mysql_real_escape_string($customer['company']),
-                                                     'email' => mysql_real_escape_string($customer['user_email']),
-                                                     'phone' => mysql_real_escape_string($customer['user_phone']),
+	$response = Braintree_Customer::create(array('firstName' =>$customer['first_name'],
+                                                     'lastName' => $customer['last_name'],
+                                                     'company' => $customer['company'],
+                                                     'email' => $customer['user_email'],
+                                                     'phone' => $customer['user_phone'],
                                                      'creditCard' => $creditCardDetails));
         $result['success'] = 0;
         if ($response->success) {
