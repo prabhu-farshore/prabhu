@@ -38,12 +38,13 @@ class BraintreePaymentComponent extends Component {
                                                      'phone' => $customer['user_phone'],
                                                      'creditCard' => $creditCardDetails));
         $result['success'] = 0;
-        $result['response'] = $response;
         if ($response->success) {
             $result['success'] = 1;
             $result['responseData']['creditCardToken'] = $response->customer->creditCards[0]->token;
             $result['responseData']['customerID'] = $response->customer->id;
             $result['responseData']['creditCardID'] = $response->customer->creditCards[0]->token;
+        }else{            
+            $result['response'] = $response;
         }
         return $result;
     }
