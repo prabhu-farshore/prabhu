@@ -48,3 +48,4 @@ class BraintreePaymentComponent extends Component {
     }
 }
 ?>
+
