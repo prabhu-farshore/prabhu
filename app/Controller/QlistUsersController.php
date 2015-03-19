@@ -40,18 +40,18 @@ class QlistUsersController extends AppController {
         $responseFromBrainTree = $this->BraintreePayment->doCharge('50419131',$creditCardDetails,5);
         
         /**** Create vault for customer in braintree ****/
-        $customer['first_name'] = "Sivaraj";
-        $customer['last_name'] = 'E';
+        $customer['first_name'] = "Dinesh";
+        $customer['last_name'] = 'D';
         $customer['company'] = '';
-        $customer['user_email'] = "Sivaraj@bttest.com";
+        $customer['user_email'] = "dinesh@bttest.com";
         $customer['user_phone'] = "9597972727";
-        $creditCardDetails = array('cardholderName' => 'Sivaraj',
+        $creditCardDetails = array('cardholderName' => 'Dinesh',
                                    'number' => '5105105105105100',
                                    'expirationMonth' => "05",
                                    'expirationYear' => "2015",
                                    'cvv' => "123");
-        $billingAddress = array('firstName' => "Sivaraj",
-                                'lastName' => "E"
+        $billingAddress = array('firstName' => "Dinesh",
+                                'lastName' => "D"
                                 /*Optional Information you can supply
                                  'company' => mysql_real_escape_string($customer['company']),
                                  'streetAddress' => mysql_real_escape_string($customer['user_address']),
