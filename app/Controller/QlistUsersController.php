@@ -65,6 +65,7 @@ class QlistUsersController extends AppController {
         $result['success'] = 0;
         $result['message'] = "Please check your card details.";
         if($responseFromBrainTree['success'] == 1){  
+            $result['success'] = 1;
             $result['message'] = "Thanks..! Payment transaction completed successfully.";        
         }else{
             $result['braintree_response'] = $responseFromBrainTree;
