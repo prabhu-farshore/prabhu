@@ -46,10 +46,10 @@ class QlistUsersController extends AppController {
         $customer['user_email'] = "dinesh@bttest.com";
         $customer['user_phone'] = "9597972727";
         $creditCardDetails = array('cardholderName' => 'Dinesh',
-                                   'number' => '5105105105105100',
-                                   'expirationMonth' => "05",
-                                   'expirationYear' => "2015",
-                                   'cvv' => "123");
+                                   'number' => '4111111111111111',
+                                   'expirationDate' => "05/2013",
+                                   'cvv' => "123",
+                                   'options' => array('verifyCard'=>true));
         $billingAddress = array('firstName' => "Dinesh",
                                 'lastName' => "D"
                                 /*Optional Information you can supply
