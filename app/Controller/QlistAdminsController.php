@@ -25,9 +25,9 @@ class QlistAdminsController extends AppController {
         $json = file_get_contents("http://maps.google.com/maps/api/geocode/json?address=$_address&sensor=true");
         $json = json_decode($json);
         if(!empty($json->{'results'}[0])){
-        $lat = $json->{'results'}[0]->{'geometry'}->{'location'}->{'lat'};
-        $long = $json->{'results'}[0]->{'geometry'}->{'location'}->{'lng'};
-        return $lat.','.$long; 
+            $lat = $json->{'results'}[0]->{'geometry'}->{'location'}->{'lat'};
+            $long = $json->{'results'}[0]->{'geometry'}->{'location'}->{'lng'};
+            return $lat.','.$long; 
         }else{
             return '';
         }
