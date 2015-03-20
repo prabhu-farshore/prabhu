@@ -33,6 +33,11 @@ class QlistAdminsController extends AppController {
         }
     }    
     
+    public function checkCoordinates(){
+        echo $this->getLatitudeLongtitude('611 cloneway street, Glandle, US, 81245');
+        exit;
+    }
+    
     /**************************************************
      * Action Name : signup                           *
      * Purpose     : Used for restaurant registration.*
