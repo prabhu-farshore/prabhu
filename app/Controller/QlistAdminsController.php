@@ -48,12 +48,12 @@ class QlistAdminsController extends AppController {
         $result['message'] = "No data found";
         
         $data['Restaurant']['device_id'] = !empty($this->params['data']['device_id']) ? $this->params['data']['device_id'] : "static_id";
-        $data['Restaurant']['email'] = !empty($this->params['data']['email']) ? $this->params['data']['email'] : "static_email@qtest.com";
+        $data['Restaurant']['email'] = !empty($this->params['data']['email']) ? $this->params['data']['email'] : "Kovil@qtest.com";
         $data['Restaurant']['password'] = !empty($this->params['data']['password']) ? $this->params['data']['password'] : "password";
-        $data['Restaurant']['restaurant_name'] = !empty($this->params['data']['restaurant_name']) ? $this->params['data']['restaurant_name'] : "Static Name";
-        $data['Restaurant']['contact_person'] = !empty($this->params['data']['contact_person']) ? $this->params['data']['contact_person'] : "Static Contact";
-        $data['Restaurant']['phone'] = !empty($this->params['data']['phone']) ? $this->params['data']['phone'] : "1234567890";
-        $data['Restaurant']['address'] = !empty($this->params['data']['address']) ? $this->params['data']['address'] : "Madurai, Tamil Nadu 625107";
+        $data['Restaurant']['restaurant_name'] = !empty($this->params['data']['restaurant_name']) ? $this->params['data']['restaurant_name'] : "The Kovil";
+        $data['Restaurant']['contact_person'] = !empty($this->params['data']['contact_person']) ? $this->params['data']['contact_person'] : "Kovil admin";
+        $data['Restaurant']['phone'] = !empty($this->params['data']['phone']) ? $this->params['data']['phone'] : "7458961235";
+        $data['Restaurant']['address'] = !empty($this->params['data']['address']) ? $this->params['data']['address'] : "Kovilpatti, Tamil Nadu";
         if(!empty($data['Restaurant']['device_id'])){
             $restaurantExists = $this->Restaurant->find('first',array('conditions'=>array('restaurant_name'=>$data['Restaurant']['restaurant_name'],
                                                                                           'phone'=>$data['Restaurant']['phone'])));
@@ -147,6 +147,25 @@ class QlistAdminsController extends AppController {
                 $result['message'] = "Restaurant doesn't exist in Q application.";
             }
         }
+        $this->set(compact("result"));
+        $this->render("default");
+    }
+                
+    /******************************************************
+     * Action Name : getRestaurantListByDistance          *
+     * Purpose     : Used to get restaurant list based on * 
+     *               current location co-ordinates.       *
+     * Created By  : Sivaraj S                            *
+     ******************************************************/
+    public function getRestaurantListByDistance(){
+        $lat = '9.9297400';
+        $lng = '78.1321050';
+        $this->Restaurant->virtualFields = array('distance' => "( 6371 * acos( cos( radians($lat) ) * cos( radians( Restaurant.latitude ) ) * cos( radians( Restaurant.longitude ) - radians($lng) ) + sin( radians($lat) ) * sin( radians( Restaurant.latitude ) ) ) )");
+        $restaurantList = $this->Restaurant->find('all',array('order' => array('Restaurant.distance ASC')));
+        $result['success'] = 1;
+        $result['message'] = "Restaurant list based on distance.";
+        $restaurantList = Set::classicExtract($restaurantList,'{n}.Restaurant');
+        $result['response']['Restaurants'] = $restaurantList;
         $this->set(compact("result"));
         $this->render("default");
     }
