@@ -87,9 +87,9 @@ class QlistAdminsController extends AppController {
         $result['message'] = "No data found";
         
         $data['Restaurant']['device_id'] = !empty($this->params['data']['device_id']) ? $this->params['data']['device_id'] : "test_device_id";
-        $data['Restaurant']['email'] = !empty($this->params['data']['email']) ? $this->params['data']['email'] : "NorthGate@qtest.com";
+        $data['Restaurant']['email'] = !empty($this->params['data']['email']) ? $this->params['data']['email'] : "static_email@qtest.com";
         $data['Restaurant']['password'] = !empty($this->params['data']['password']) ? $this->params['data']['password'] : "password";
-        $data['Restaurant']['phone'] = !empty($this->params['data']['phone']) ? $this->params['data']['phone'] : "9597972727";
+        $data['Restaurant']['phone'] = !empty($this->params['data']['phone']) ? $this->params['data']['phone'] : "1234567890";
         if(!empty($data['Restaurant']['phone'])){
             $hashedPassword = sha1($data['Restaurant']['password']);
             $restaurantDetails = $this->Restaurant->find('first',array('conditions'=>array('email'=>$data['Restaurant']['email'],
