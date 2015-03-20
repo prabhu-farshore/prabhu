@@ -119,12 +119,17 @@ class QlistAdminsController extends AppController {
         
         $id = !empty($this->params['data']['restaurant_id']) ? $this->params['data']['restaurant_id'] : "1";
         if(!empty($id)){
-            $this->Restaurant->id = $id;
-            if($this->Restaurant->saveField('is_online','1')){
-                $result['success'] = 1;
-                $result['message'] = "Restaurant set to active status.";
+            $restaurantExists = $this->Restaurant->find('first',array('conditions'=>array('Restaurant.id'=>$id)));
+            if(!empty($restaurantExists)){
+                $this->Restaurant->id = $id;
+                if($this->Restaurant->saveField('is_online','1')){
+                    $result['success'] = 1;
+                    $result['message'] = "Restaurant set to active status.";
+                }else{
+                    $result['message'] = "Sorry.. Can't update restaurant status.";
+                }
             }else{
-                $result['message'] = "Sorry.. Can't update restaurant status.";
+                $result['message'] = "Restaurant doesn't exist in Q application.";
             }
         }
         $this->set(compact("result"));
