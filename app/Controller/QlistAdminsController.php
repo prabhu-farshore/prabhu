@@ -96,9 +96,10 @@ class QlistAdminsController extends AppController {
                                                                                            'phone'=>$data['Restaurant']['phone'],
                                                                                            'password'=>$hashedPassword)));
             if(!empty($restaurantDetails)){
-                if($restaurantDetails['device_id']!=$data['Restaurant']['device_id']){
-                    $this->Restaurant->id = $restaurantDetails['id'];
+                if($restaurantDetails['Restaurant']['device_id'] != $data['Restaurant']['device_id']){
+                    $this->Restaurant->id = $restaurantDetails['Restaurant']['id'];
                     $this->Restaurant->saveField('device_id',$data['Restaurant']['device_id']);
+                    $restaurantDetails['Restaurant']['device_id']= $data['Restaurant']['device_id'];
                 }
                 $result['success'] = 1;
                 $result['message'] = "Welcome back to Q application.";
