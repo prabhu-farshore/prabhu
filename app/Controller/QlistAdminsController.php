@@ -60,9 +60,8 @@ class QlistAdminsController extends AppController {
                     $data['Restaurant']['latitude'] = $latitudeLongtitude[0];
                     $data['Restaurant']['longitude'] = $latitudeLongtitude[1];
                     if($this->Restaurant->save($data['Restaurant'])){
-                        $restaurantDetails = $this->Restaurant->find('first',array('conditions'=>array('email'=>$data['Restaurant']['email'],
-                                                                                                       'phone'=>$data['Restaurant']['phone'],
-                                                                                                       'password'=>$hashedPassword)));
+                        $lastRestaurantId = $this->Restaurant->getLastInsertId();
+                        $restaurantDetails = $this->Restaurant->find('first',array('conditions'=>array('Restaurant.id'=>$lastRestaurantId)));
                         $result['success'] = 1;
                         $result['message'] = "Thanks for signingup with Q application.";
                         $result['response'] = $restaurantDetails;
