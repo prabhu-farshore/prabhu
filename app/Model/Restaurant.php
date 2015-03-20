@@ -8,7 +8,7 @@ class Restaurant extends AppModel {
 
     public function beforeSave($options = array()) {
         if (isset($this->data[$this->alias]['password'])) {
-            $this->data[$this->alias]['password'] = md5($this->data[$this->alias]['password']);
+            $this->data[$this->alias]['password'] = sha1($this->data[$this->alias]['password']);
         }
         return true;
     }

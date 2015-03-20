@@ -33,11 +33,11 @@ class QlistAdminsController extends AppController {
         }
     }    
     
-    /***********************************************
-     * Action Name : signup                        *
-     * Purpose     : Used for user registration.   *
-     * Created By  : Sivaraj S                     *
-     ***********************************************/
+    /**************************************************
+     * Action Name : signup                           *
+     * Purpose     : Used for restaurant registration.*
+     * Created By  : Sivaraj S                        *
+     **************************************************/
     public function signup(){   
         $result['success'] = 0;
         $result['message'] = "No data found";
@@ -45,12 +45,13 @@ class QlistAdminsController extends AppController {
         $data['Restaurant']['device_id'] = !empty($this->params['data']['device_id']) ? $this->params['data']['device_id'] : "test_device_id";
         $data['Restaurant']['email'] = !empty($this->params['data']['email']) ? $this->params['data']['email'] : "NorthGate@qtest.com";
         $data['Restaurant']['password'] = !empty($this->params['data']['password']) ? $this->params['data']['password'] : "password";
-        $data['Restaurant']['confirm_password'] = !empty($this->params['data']['confirm_password']) ? $this->params['data']['confirm_password'] : "password";
         $data['Restaurant']['restaurant_name'] = !empty($this->params['data']['restaurant_name']) ? $this->params['data']['restaurant_name'] : "NorthGate";
         $data['Restaurant']['contact_person'] = !empty($this->params['data']['contact_person']) ? $this->params['data']['contact_person'] : "NorthGate admin";
+        $data['Restaurant']['phone'] = !empty($this->params['data']['phone']) ? $this->params['data']['phone'] : "9597972727";
         $data['Restaurant']['address'] = !empty($this->params['data']['address']) ? $this->params['data']['address'] : "Poppys Hotel, Madurai, Tamil Nadu 625107";
         if(!empty($data['Restaurant']['device_id'])){
-            $restaurantExists = $this->Restaurant->find('first',array('conditions'=>array('email'=>$data['Restaurant']['email'])));
+            $restaurantExists = $this->Restaurant->find('first',array('conditions'=>array('restaurant_name'=>$data['Restaurant']['restaurant_name'],
+                                                                                          'phone'=>$data['Restaurant']['phone'])));
             if(empty($restaurantExists)){
                 $result['message'] = "failed to resgister with Q application.";
                 $locationCoordinates = $this->getLatitudeLongtitude($data['Restaurant']['address']); 
@@ -59,8 +60,12 @@ class QlistAdminsController extends AppController {
                     $data['Restaurant']['latitude'] = $latitudeLongtitude[0];
                     $data['Restaurant']['longitude'] = $latitudeLongtitude[1];
                     if($this->Restaurant->save($data['Restaurant'])){
+                        $restaurantDetails = $this->Restaurant->find('first',array('conditions'=>array('email'=>$data['Restaurant']['email'],
+                                                                                                       'phone'=>$data['Restaurant']['phone'],
+                                                                                                       'password'=>$hashedPassword)));
                         $result['success'] = 1;
                         $result['message'] = "Thanks for signingup with Q application.";
+                        $result['response'] = $restaurantDetails;
                     }
                 }else{
                     $result['message'] = "Sorry.. we cannot get you location co-ordinates.";
@@ -71,6 +76,59 @@ class QlistAdminsController extends AppController {
         }
         $this->set(compact("result"));
         $this->render("default");
-    }    
+    }     
+        
+    /**********************************************
+     * Action Name : login                        *
+     * Purpose     : Used for restaurant login.   *
+     * Created By  : Sivaraj S                    *
+     **********************************************/
+    public function login(){   
+        $result['success'] = 0;
+        $result['message'] = "No data found";
+        
+        $data['Restaurant']['device_id'] = !empty($this->params['data']['device_id']) ? $this->params['data']['device_id'] : "test_device_id";
+        $data['Restaurant']['email'] = !empty($this->params['data']['email']) ? $this->params['data']['email'] : "NorthGate@qtest.com";
+        $data['Restaurant']['password'] = !empty($this->params['data']['password']) ? $this->params['data']['password'] : "password";
+        $data['Restaurant']['phone'] = !empty($this->params['data']['phone']) ? $this->params['data']['phone'] : "9597972727";
+        if(!empty($data['Restaurant']['phone'])){
+            $hashedPassword = sha1($data['Restaurant']['password']);
+            $restaurantDetails = $this->Restaurant->find('first',array('conditions'=>array('email'=>$data['Restaurant']['email'],
+                                                                                           'phone'=>$data['Restaurant']['phone'],
+                                                                                           'password'=>$hashedPassword)));
+            if(!empty($restaurantDetails)){
+                $result['success'] = 1;
+                $result['message'] = "Welcome back to Q application.";
+                $result['response'] = $restaurantDetails;
+            }else{
+                $result['message'] = "Please check our login credential.";
+            }
+        }
+        $this->set(compact("result"));
+        $this->render("default");
+    }     
+            
+    /**********************************************
+     * Action Name : login                        *
+     * Purpose     : Used for restaurant login.   *
+     * Created By  : Sivaraj S                    *
+     **********************************************/
+    public function setRestaurantOnlineStatus(){   
+        $result['success'] = 0;
+        $result['message'] = "No data found";
+        
+        $id = !empty($this->params['data']['restaurant_id']) ? $this->params['data']['restaurant_id'] : "1";
+        if(!empty($id)){
+            $this->Restaurant->id = $id;
+            if($this->Restaurant->saveField('is_online','1')){
+                $result['success'] = 1;
+                $result['message'] = "Restaurant set to active status.";
+            }else{
+                $result['message'] = "Sorry.. Can't update restaurant status.";
+            }
+        }
+        $this->set(compact("result"));
+        $this->render("default");
+    }
 }
 ?>
