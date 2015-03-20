@@ -90,6 +90,7 @@ class QlistAdminsController extends AppController {
         $data['Restaurant']['email'] = !empty($this->params['data']['email']) ? $this->params['data']['email'] : "static_email@qtest.com";
         $data['Restaurant']['password'] = !empty($this->params['data']['password']) ? $this->params['data']['password'] : "password";
         $data['Restaurant']['phone'] = !empty($this->params['data']['phone']) ? $this->params['data']['phone'] : "1234567890";
+        $data['Restaurant']['address'] = !empty($this->params['data']['address']) ? $this->params['data']['address'] : "0";
         if(!empty($data['Restaurant']['phone'])){
             $hashedPassword = sha1($data['Restaurant']['password']);
             $restaurantDetails = $this->Restaurant->find('first',array('conditions'=>array('email'=>$data['Restaurant']['email'],
@@ -100,6 +101,11 @@ class QlistAdminsController extends AppController {
                     $this->Restaurant->id = $restaurantDetails['Restaurant']['id'];
                     $this->Restaurant->saveField('device_id',$data['Restaurant']['device_id']);
                     $restaurantDetails['Restaurant']['device_id']= $data['Restaurant']['device_id'];
+                }
+                if($data['Restaurant']['address'] != 0){
+                    $this->Restaurant->id = $restaurantDetails['Restaurant']['id'];
+                    $this->Restaurant->saveField('address',$data['Restaurant']['address']);
+                    $restaurantDetails['Restaurant']['address']= $data['Restaurant']['address'];
                 }
                 $result['success'] = 1;
                 $result['message'] = "Welcome back to Q application.";
