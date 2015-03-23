@@ -8,7 +8,7 @@ class QlistAdminsController extends AppController {
     var $name = 'QlistAdmin';
     var $components = array('Email','RequestHandler','Paginator');
     
-    public $uses = array('Restaurant');
+    public $uses = array('Restaurant','Holiday');
     public $result = array();
    
     public function beforeFilter() {
@@ -47,13 +47,27 @@ class QlistAdminsController extends AppController {
         $result['success'] = 0;
         $result['message'] = "No data found";
         
-        $data['Restaurant']['device_id'] = !empty($this->params['data']['device_id']) ? $this->params['data']['device_id'] : "static_id";
-        $data['Restaurant']['email'] = !empty($this->params['data']['email']) ? $this->params['data']['email'] : "Kovil@qtest.com";
+        $data['Restaurant']['device_id'] = !empty($this->params['data']['device_id']) ? $this->params['data']['device_id'] : "test_device_id";
+        $data['Restaurant']['email'] = !empty($this->params['data']['email']) ? $this->params['data']['email'] : "FSP@qtest.com";
         $data['Restaurant']['password'] = !empty($this->params['data']['password']) ? $this->params['data']['password'] : "password";
-        $data['Restaurant']['restaurant_name'] = !empty($this->params['data']['restaurant_name']) ? $this->params['data']['restaurant_name'] : "The Kovil";
-        $data['Restaurant']['contact_person'] = !empty($this->params['data']['contact_person']) ? $this->params['data']['contact_person'] : "Kovil admin";
-        $data['Restaurant']['phone'] = !empty($this->params['data']['phone']) ? $this->params['data']['phone'] : "7458961235";
-        $data['Restaurant']['address'] = !empty($this->params['data']['address']) ? $this->params['data']['address'] : "Kovilpatti, Tamil Nadu";
+        $data['Restaurant']['restaurant_name'] = !empty($this->params['data']['restaurant_name']) ? $this->params['data']['restaurant_name'] : "FSPs";
+        $data['Restaurant']['contact_person'] = !empty($this->params['data']['contact_person']) ? $this->params['data']['contact_person'] : "FSP admin";
+        $data['Restaurant']['phone'] = !empty($this->params['data']['phone']) ? $this->params['data']['phone'] : "1456939872";
+        $data['Restaurant']['address'] = !empty($this->params['data']['address']) ? $this->params['data']['address'] : "Madurai, Tamilnadu";
+        $data['Restaurant']['2_top_avg_time'] = !empty($this->params['data']['2_top_avg_time']) ? $this->params['data']['2_top_avg_time'] : "";
+        $data['Restaurant']['4_top_avg_time'] = !empty($this->params['data']['4_top_avg_time']) ? $this->params['data']['4_top_avg_time'] : "";
+        $data['Restaurant']['6_top_avg_time'] = !empty($this->params['data']['6_top_avg_time']) ? $this->params['data']['6_top_avg_time'] : "";
+        $data['Restaurant']['allow_6_top_remote'] = !empty($this->params['data']['allow_6_top_remote']) ? $this->params['data']['allow_6_top_remote'] : "";
+        
+        $data['Holiday'] = array(0=>array('restaurant_id' => "1",'date' => date('Y-m-d'),'holiday_name'=>"Workers day",'country'=>'US'),
+                                1=>array('restaurant_id' => "1",'date' => date('Y-m-d'),'holiday_name'=>"Workers day",'country'=>'USA'),
+                                2=>array('restaurant_id' => "1",'date' => date('Y-m-d'),'holiday_name'=>"Workers day",'country'=>'UK'));
+        
+//        $data['Holiday'] = !empty($this->params['data']['holidays']) ? $this->params['data']['holidays'] : "";
+        
+        $data['Restaurant'] = array_filter($data['Restaurant']);
+        $data['Holiday'] = array_filter($data['Holiday']);
+        
         if(!empty($data['Restaurant']['device_id'])){
             $restaurantExists = $this->Restaurant->find('first',array('conditions'=>array('restaurant_name'=>$data['Restaurant']['restaurant_name'],
                                                                                           'phone'=>$data['Restaurant']['phone'])));
@@ -66,7 +80,10 @@ class QlistAdminsController extends AppController {
                     $data['Restaurant']['longitude'] = $latitudeLongtitude[1];
                     if($this->Restaurant->save($data['Restaurant'])){
                         $lastRestaurantId = $this->Restaurant->getLastInsertId();
+                        if(!empty($data['Holiday']))
+                            $this->setHolidayInformation($data['Holiday']);
                         $restaurantDetails = $this->Restaurant->find('first',array('conditions'=>array('Restaurant.id'=>$lastRestaurantId)));
+                        
                         $result['success'] = 1;
                         $result['message'] = "Thanks for signingup with Q application.";
                         $result['response'] = $restaurantDetails;
@@ -116,14 +133,13 @@ class QlistAdminsController extends AppController {
                 $result['success'] = 1;
                 $result['message'] = "Welcome back to Q application.";
                 $result['response'] = $restaurantDetails;
-                unset($result['response']['Restaurant']['password']);
             }else{
                 $result['message'] = "Please check our login credential.";
             }
         }
         $this->set(compact("result"));
         $this->render("default");
-    }     
+    }      
             
     /*******************************************************
      * Action Name : setRestaurantOnlineStatus             *
@@ -172,53 +188,33 @@ class QlistAdminsController extends AppController {
         $this->render("default");
     }    
         
-    /**********************************************************
-     * Action Name : updateRestaurantDetails                  *
-     * Purpose     : Used for udpate restaurant registration. *
-     * Created By  : Sivaraj S                                *
-     **********************************************************/
+    /*****************************************************
+     * Action Name : updateRestaurantDetails             *
+     * Purpose     : Used for update restaurant details. *
+     * Created By  : Sivaraj S                           *
+     *****************************************************/
     public function updateRestaurantDetails(){   
         $result['success'] = 0;
         $result['message'] = "No data found";
         
         $data['Restaurant']['id'] = !empty($this->params['data']['restaurant_id']) ? $this->params['data']['restaurant_id'] : "1";
-        $data['Restaurant']['email'] = !empty($this->params['data']['email']) ? $this->params['data']['email'] : "Kovilkulam@qtest.com";
-        $data['Restaurant']['restaurant_name'] = !empty($this->params['data']['restaurant_name']) ? $this->params['data']['restaurant_name'] : "The Kovil kulam";
-        $data['Restaurant']['contact_person'] = !empty($this->params['data']['contact_person']) ? $this->params['data']['contact_person'] : "Kovil kulam admin";
-        $data['Restaurant']['phone'] = !empty($this->params['data']['phone']) ? $this->params['data']['phone'] : "15963247893";
-        $data['Restaurant']['address'] = !empty($this->params['data']['address']) ? $this->params['data']['address'] : "Mumbai, Tamil Nadu";
+        $data['Restaurant']['email'] = !empty($this->params['data']['email']) ? $this->params['data']['email'] : "";
+        $data['Restaurant']['restaurant_name'] = !empty($this->params['data']['restaurant_name']) ? $this->params['data']['restaurant_name'] : "";
+        $data['Restaurant']['contact_person'] = !empty($this->params['data']['contact_person']) ? $this->params['data']['contact_person'] : "";
+        $data['Restaurant']['phone'] = !empty($this->params['data']['phone']) ? $this->params['data']['phone'] : "";
+        $data['Restaurant']['address'] = !empty($this->params['data']['address']) ? $this->params['data']['address'] : "";
+        $data['Restaurant']['2_top_avg_time'] = !empty($this->params['data']['2_top_avg_time']) ? $this->params['data']['2_top_avg_time'] : "";
+        $data['Restaurant']['4_top_avg_time'] = !empty($this->params['data']['4_top_avg_time']) ? $this->params['data']['4_top_avg_time'] : "00:00:30";
+        $data['Restaurant']['6_top_avg_time'] = !empty($this->params['data']['6_top_avg_time']) ? $this->params['data']['6_top_avg_time'] : "";
+        $data['Restaurant']['allow_6_top_remote'] = !empty($this->params['data']['allow_6_top_remote']) ? $this->params['data']['allow_6_top_remote'] : "";
+ 
+        $data['Restaurant'] = array_filter($data['Restaurant']);
+        
         if(!empty($data['Restaurant']['id'])){
             $restaurantExists = $this->Restaurant->find('first',array('conditions'=>array('Restaurant.id'=>$data['Restaurant']['id'])));
             $result['response'] = $restaurantExists;
             if(!empty($restaurantExists)){
-                $duplicateRestaurantExists = $this->Restaurant->find('first',array('conditions'=>array('Restaurant.id !='=>$data['Restaurant']['id'],
-                                                                                              'OR'=>array('restaurant_name'=>$data['Restaurant']['restaurant_name'],
-                                                                                                          'phone'=>$data['Restaurant']['phone']))));
-                $result['message'] = "Failed to update restaurant information.";
-                if(empty($duplicateRestaurantExists)){
-                    $isCoordinateCalulated = true;
-                    if($data['Restaurant']['address'] != $restaurantExists['Restaurant']['address']){
-                        $locationCoordinates = $this->getLatitudeLongtitude($data['Restaurant']['address']); 
-                        if(!empty($locationCoordinates)){
-                            $latitudeLongtitude = explode(',',$locationCoordinates);
-                            $data['Restaurant']['latitude'] = $latitudeLongtitude[0];
-                            $data['Restaurant']['longitude'] = $latitudeLongtitude[1];
-                        }else{
-                            $isCoordinateCalulated = false;
-                            $result['message'] = "Sorry.. we cannot get you location co-ordinates.";
-                        }
-                    }
-                    if($isCoordinateCalulated){
-                        if($this->Restaurant->save($data['Restaurant'])){
-                            $restaurantDetails = $this->Restaurant->find('first',array('conditions'=>array('Restaurant.id'=>$data['Restaurant']['id'])));
-                            $result['success'] = 1;
-                            $result['message'] = "Restaurant information updated.";
-                            $result['response'] = $restaurantDetails;
-                        }
-                    }
-                }else{
-                   $result['message'] = "Already restaurant exists with same name or phone number."; 
-                }
+                    $result = $this->updateRestaurantInfo($data,$restaurantExists);
             }else{
                 $result['message'] = "Restaurant doesn't exist in Q application.";
             }
@@ -226,6 +222,104 @@ class QlistAdminsController extends AppController {
         unset($result['response']['Restaurant']['password']);
         $this->set(compact("result"));
         $this->render("default");
-    } 
+    }
+    
+    /*********************************************************
+     * Action Name : updateRestaurantDetails                 *
+     * Purpose     : Used for update restaurant information. *
+     * Created By  : Sivaraj S                               *
+     *********************************************************/
+    public function updateRestaurantInfo($data,$restaurantExists){
+        $result['success'] = 0;
+        $duplicateRestaurantExists = $this->Restaurant->find('first',array('conditions'=>array('Restaurant.id !='=>$data['Restaurant']['id'],
+                                                                                               'OR'=>array('restaurant_name'=>$restaurantExists['Restaurant']['restaurant_name'],
+                                                                                                           'phone'=>$restaurantExists['Restaurant']['phone']))));
+        $result['message'] = "Failed to update restaurant information.";
+        if(empty($duplicateRestaurantExists)){
+            $isCoordinateCalulated = true;
+            if(isset($data['Restaurant']['address'])){
+                $locationCoordinates = $this->getLatitudeLongtitude($data['Restaurant']['address']); 
+                if(!empty($locationCoordinates)){
+                    $latitudeLongtitude = explode(',',$locationCoordinates);
+                    $data['Restaurant']['latitude'] = $latitudeLongtitude[0];
+                    $data['Restaurant']['longitude'] = $latitudeLongtitude[1];
+                }else{
+                    $isCoordinateCalulated = false;
+                    $result['message'] = "Sorry.. we cannot get you location co-ordinates.";
+                }
+            }
+            if($isCoordinateCalulated){
+                if($this->Restaurant->save($data['Restaurant'])){
+                    $restaurantDetails = $this->Restaurant->find('first',array('conditions'=>array('Restaurant.id'=>$data['Restaurant']['id'])));
+                    $result['success'] = 1;
+                    $result['message'] = "Restaurant information updated.";
+                    $result['response'] = $restaurantDetails;
+                }
+            }
+        }else{
+           $result['message'] = "Already restaurant exists with same name or phone number."; 
+        }
+        return $result;
+    }
+    
+    /******************************************************
+     * Action Name : setHolidayInformation                *
+     * Purpose     : Used to save restaurant information. *
+     * Created By  : Sivaraj S                            *
+     ******************************************************/
+    public function setHolidayInformation($paramData = null){        
+        $result['success'] = 0;
+        $result['message'] = "No data found";
+        
+        if($paramData != null){
+            $data = $paramData;
+        }else{        
+            $data['id'] = !empty($this->params['data']['holiday_id']) ? $this->params['data']['holiday_id'] : "1";
+            $data['restaurant_id'] = !empty($this->params['data']['restaurant_id']) ? $this->params['data']['restaurant_id'] : "1";
+            $data['date'] = !empty($this->params['data']['date']) ? $this->params['data']['date'] : date('Y-m-d');
+            $data['holiday_name'] = !empty($this->params['data']['holiday_name']) ? $this->params['data']['holiday_name'] : "Workers day";
+            $data['country'] = !empty($this->params['data']['country']) ? $this->params['data']['country'] : "US";
+        }
+        if(!empty($data)){
+            foreach($data as $holiday){
+                $this->Holiday->create();
+                $this->Holiday->save($holiday);
+            }
+            $result['success'] = 1;
+            if(!empty($data['Holiday']['id']))
+                $result['message'] = "Holiday updated to the calendar.";
+            else
+                $result['message'] = "Holiday added to the your calendar.";
+        }else{
+            $result['message'] = "Some holiday details missing.";
+        }
+        $this->set(compact("result"));
+        $this->render("default");
+    }
+    
+        
+    /*****************************************************
+     * Action Name : getRestaurantDetails                *
+     * Purpose     : Used to get restaurant information. *
+     * Created By  : Sivaraj S                           *
+     *****************************************************/
+    public function getRestaurantDetails(){  
+        $result['success'] = 0;
+        $result['message'] = "No data found";
+        
+        $data['Restaurant']['id'] = !empty($this->params['data']['restaurant_id']) ? $this->params['data']['restaurant_id'] : "1";
+        if(!empty($data['Restaurant']['id'])){
+            $restaurantExists = $this->Restaurant->find('first',array('conditions'=>array('Restaurant.id'=>$data['Restaurant']['id'])));
+            if(!empty($restaurantExists)){
+                $result['success'] = 1;
+                $result['response'] = $restaurantExists;
+                $result['message'] = "Restaurant details retrieved successfully.";
+            }else{
+                $result['message'] = "Restaurant doesn't exist in Q application.";
+            }
+        }
+        $this->set(compact("result"));
+        $this->render("default");
+    }
 }
 ?>
