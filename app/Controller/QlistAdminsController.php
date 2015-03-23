@@ -70,6 +70,7 @@ class QlistAdminsController extends AppController {
                         $result['success'] = 1;
                         $result['message'] = "Thanks for signingup with Q application.";
                         $result['response'] = $restaurantDetails;
+                        unset($result['response']['Restaurant']['password']);
                     }
                 }else{
                     $result['message'] = "Sorry.. we cannot get you location co-ordinates.";
@@ -115,6 +116,7 @@ class QlistAdminsController extends AppController {
                 $result['success'] = 1;
                 $result['message'] = "Welcome back to Q application.";
                 $result['response'] = $restaurantDetails;
+                unset($result['response']['Restaurant']['password']);
             }else{
                 $result['message'] = "Please check our login credential.";
             }
@@ -168,6 +170,62 @@ class QlistAdminsController extends AppController {
         $result['response']['Restaurants'] = $restaurantList;
         $this->set(compact("result"));
         $this->render("default");
-    }
+    }    
+        
+    /**********************************************************
+     * Action Name : updateRestaurantDetails                  *
+     * Purpose     : Used for udpate restaurant registration. *
+     * Created By  : Sivaraj S                                *
+     **********************************************************/
+    public function updateRestaurantDetails(){   
+        $result['success'] = 0;
+        $result['message'] = "No data found";
+        
+        $data['Restaurant']['id'] = !empty($this->params['data']['restaurant_id']) ? $this->params['data']['restaurant_id'] : "1";
+        $data['Restaurant']['email'] = !empty($this->params['data']['email']) ? $this->params['data']['email'] : "Kovilkulam@qtest.com";
+        $data['Restaurant']['restaurant_name'] = !empty($this->params['data']['restaurant_name']) ? $this->params['data']['restaurant_name'] : "The Kovil kulam";
+        $data['Restaurant']['contact_person'] = !empty($this->params['data']['contact_person']) ? $this->params['data']['contact_person'] : "Kovil kulam admin";
+        $data['Restaurant']['phone'] = !empty($this->params['data']['phone']) ? $this->params['data']['phone'] : "15963247893";
+        $data['Restaurant']['address'] = !empty($this->params['data']['address']) ? $this->params['data']['address'] : "Mumbai, Tamil Nadu";
+        if(!empty($data['Restaurant']['id'])){
+            $restaurantExists = $this->Restaurant->find('first',array('conditions'=>array('Restaurant.id'=>$data['Restaurant']['id'])));
+            $result['response'] = $restaurantExists;
+            if(!empty($restaurantExists)){
+                $duplicateRestaurantExists = $this->Restaurant->find('first',array('conditions'=>array('Restaurant.id !='=>$data['Restaurant']['id'],
+                                                                                              'OR'=>array('restaurant_name'=>$data['Restaurant']['restaurant_name'],
+                                                                                                          'phone'=>$data['Restaurant']['phone']))));
+                $result['message'] = "Failed to update restaurant information.";
+                if(empty($duplicateRestaurantExists)){
+                    $isCoordinateCalulated = true;
+                    if($data['Restaurant']['address'] != $restaurantExists['Restaurant']['address']){
+                        $locationCoordinates = $this->getLatitudeLongtitude($data['Restaurant']['address']); 
+                        if(!empty($locationCoordinates)){
+                            $latitudeLongtitude = explode(',',$locationCoordinates);
+                            $data['Restaurant']['latitude'] = $latitudeLongtitude[0];
+                            $data['Restaurant']['longitude'] = $latitudeLongtitude[1];
+                        }else{
+                            $isCoordinateCalulated = false;
+                            $result['message'] = "Sorry.. we cannot get you location co-ordinates.";
+                        }
+                    }
+                    if($isCoordinateCalulated){
+                        if($this->Restaurant->save($data['Restaurant'])){
+                            $restaurantDetails = $this->Restaurant->find('first',array('conditions'=>array('Restaurant.id'=>$data['Restaurant']['id'])));
+                            $result['success'] = 1;
+                            $result['message'] = "Restaurant information updated.";
+                            $result['response'] = $restaurantDetails;
+                        }
+                    }
+                }else{
+                   $result['message'] = "Already restaurant exists with same name or phone number."; 
+                }
+            }else{
+                $result['message'] = "Restaurant doesn't exist in Q application.";
+            }
+        }
+        unset($result['response']['Restaurant']['password']);
+        $this->set(compact("result"));
+        $this->render("default");
+    } 
 }
 ?>
