@@ -123,11 +123,11 @@ class QlistAdminsController extends AppController {
         $this->render("default");
     }     
             
-    /**********************************************
-     * Action Name : login                        *
-     * Purpose     : Used for restaurant login.   *
-     * Created By  : Sivaraj S                    *
-     **********************************************/
+    /*******************************************************
+     * Action Name : setRestaurantOnlineStatus             *
+     * Purpose     : Used to set restaurant online status. *
+     * Created By  : Sivaraj S                             *
+     *******************************************************/
     public function setRestaurantOnlineStatus(){   
         $result['success'] = 0;
         $result['message'] = "No data found";
