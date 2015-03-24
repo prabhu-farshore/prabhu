@@ -1,4 +1,3 @@
-
 <?php
 /*******************************************
  * Controller Name  : QlistUsersController *
