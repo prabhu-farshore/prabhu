@@ -108,25 +108,26 @@ class QlistUsersController extends AppController {
     }
     
      public function map_screen() {
-         $result['success'] = 0;
+        $result['success'] = 0;
         $result['message'] = "Not found";
-        if(isset($this->params['data']['phone']) && !empty($this->params['data']['phone'])){
-        
-        $lat = isset($this->params['data']['latitude']) ? $this->params['data']['latitude'] : '9.9642971';
-        $lng = isset($this->params['data']['longitude']) ? $this->params['data']['longitude'] : '78.1735438';
-        $partySize = isset($this->params['data']['party_size']) ? $this->params['data']['party_size'] : '2';
-        $this->Restaurant->virtualFields = array('distance' => "( 3959 * acos( cos( radians($lat) ) * cos( radians( Restaurant.latitude ) ) * cos( radians( Restaurant.longitude ) - radians($lng) ) + sin( radians($lat) ) * sin( radians( Restaurant.latitude ) ) ) )");
-        $restaurantList = $this->Restaurant->find('all', array('conditions'=>array('Restaurant.distance <'=> 5),'order' => array('Restaurant.distance ASC')));
-        $result['success'] = 1;
-        $result['message'] = "Restaurant list based on distance.";
-        $restaurantList = Set::classicExtract($restaurantList, '{n}.Restaurant');
-        $result['response']['Restaurants'] = $restaurantList;
-        $this->set(compact("result"));
-        $this->render("default");
 
+        if (isset($this->params['data']['phone']) && !empty($this->params['data']['phone'])) {
+            $checkPhoneExist = $this->Guest->find('list', array('conditions' => array('phone' => $this->params['data']['phone'])));
+            $result['message'] = "User not found";
+            if (!empty($checkPhoneExist)) {
+                $lat = isset($this->params['data']['latitude']) ? $this->params['data']['latitude'] : '9.9642971';
+                $lng = isset($this->params['data']['longitude']) ? $this->params['data']['longitude'] : '78.1735438';
+                $partySize = isset($this->params['data']['party_size']) ? $this->params['data']['party_size'] : '2';
+                $this->Restaurant->virtualFields = array('distance' => "( 3959 * acos( cos( radians($lat) ) * cos( radians( Restaurant.latitude ) ) * cos( radians( Restaurant.longitude ) - radians($lng) ) + sin( radians($lat) ) * sin( radians( Restaurant.latitude ) ) ) )", 'new_restuarant' => "DATEDIFF(NOW(),Restaurant.created) <= 30", 'Qtime' => '1.50');
+                $restaurantList = $this->Restaurant->find('all', array('conditions' => array('Restaurant.distance <' => 5), 'order' => array('Restaurant.distance ASC')));
+                $result['success'] = 1;
+                $result['message'] = "Restaurant list based on distance.";
+                $restaurantList = Set::classicExtract($restaurantList, '{n}.Restaurant');
+                $result['response']['Restaurants'] = $restaurantList;
+            }
         }
         $this->set(compact('result'));
         $this->render('default');
-     }
+    }
 }
 ?>
