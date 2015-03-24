@@ -318,8 +318,9 @@ class QlistAdminsController extends AppController {
     
     public function getNationalHolidays(){
         $result['success'] = 1;
-        $nationalHolidays = $this->Holiday->find('all',array('conditions'=>array('restaurant_id'=>0,'state'=>'closed')));
-        $result['response']['nationalHolidays'] = Set::classicExtract($nationalHolidays,'{n}.Holiday');
+        $nationalHolidays = $this->Holiday->find('all',array('conditions'=>array('restaurant_id'=>0,'state'=>'closed'),
+                                                             'fields'=>array('date_format(Holiday.date,"%b %d") as holiday_date','TRIM(holiday_name) as name')));
+        $result['response']['nationalHolidays'] = Set::classicExtract($nationalHolidays,'{n}.0');
         $result['message'] = "National holidays listed successfully.";
         $this->set(compact("result"));
         $this->render("default");
