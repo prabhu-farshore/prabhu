@@ -101,7 +101,7 @@ class QlistUsersController extends AppController {
         $this->render('default');
     }
     public function hash_password($pass) {
-        
+
         $hash = 'DYhG93b0qyJfIxfs2guVoUubWwvniR2G0FgaC9miY';
         $pass = sha1($hash . $pass);
         return $pass;
@@ -124,6 +124,28 @@ class QlistUsersController extends AppController {
                 $result['message'] = "Restaurant list based on distance.";
                 $restaurantList = Set::classicExtract($restaurantList, '{n}.Restaurant');
                 $result['response']['Restaurants'] = $restaurantList;
+            }
+        }
+        $this->set(compact('result'));
+        $this->render('default');
+    }
+    public function citiesByNearestLocation(){
+        $result['success'] = 0;
+        $result['message'] = "Not found";
+        $lat = isset($this->params['data']['latitude']) ? $this->params['data']['latitude'] : '32.239551';
+        $lng = isset($this->params['data']['longitude']) ? $this->params['data']['longitude'] : '-110.96496';
+        if (isset($this->params['data']['latitude']) && !empty($this->params['data']['latitude'])) {
+            $this->Restaurant->virtualFields = array('distance' => "( 3959 * acos( cos( radians($lat) ) * cos( radians( Restaurant.latitude ) ) * cos( radians( Restaurant.longitude ) - radians($lng) ) + sin( radians($lat) ) * sin( radians( Restaurant.latitude ) ) ) )");
+            $restaurantList = $this->Restaurant->find('list', array('fields' => array('Restaurant.address'), 'conditions' => array('Restaurant.distance <' => 1000), 'order' => array('Restaurant.distance ASC')));
+            $result['success'] = 1;
+            $result['message'] = "Cities list based on distance.";
+            //$restaurantList = Set::classicExtract($restaurantList, '{n}.Restaurant');
+            foreach($restaurantList as $val){
+                $strArr=  explode(" ", $val);
+                $getPos=count($strArr)-4;
+                $key=$strArr[$getPos];
+                if(in_array($key,$strArr))
+                    $result['response']['Cities'][]=$strArr[$getPos];
             }
         }
         $this->set(compact('result'));
