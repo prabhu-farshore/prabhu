@@ -8,7 +8,7 @@ class QlistAdminsController extends AppController {
     var $name = 'QlistAdmin';
     var $components = array('Email','RequestHandler','Paginator');
     
-    public $uses = array('Restaurant','Holiday');
+    public $uses = array('Restaurant','Holiday','Workinghours');
     public $result = array();
    
     public function beforeFilter() {
@@ -56,9 +56,11 @@ class QlistAdminsController extends AppController {
         $data['Restaurant']['address'] = !empty($this->params['data']['address']) ? $this->params['data']['address'] : "Madurai, Tamilnadu";
 
         $data['Holiday'] = !empty($this->params['data']['holidays']) ? $this->params['data']['holidays'] : "";
+        $data['Workinghours'] = !empty($this->params['data']['working_hours']) ? $this->params['data']['working_hours'] : "";
         
         $data['Restaurant'] = array_filter($data['Restaurant']);
         $data['Holiday'] = array_filter($data['Holiday']);
+        $data['Workinghours'] = array_filter($data['Workinghours']);
         
         if(!empty($data['Restaurant']['device_id'])){
             $restaurantExists = $this->Restaurant->find('first',array('conditions'=>array('restaurant_name'=>$data['Restaurant']['restaurant_name'],
@@ -74,6 +76,8 @@ class QlistAdminsController extends AppController {
                         $lastRestaurantId = $this->Restaurant->getLastInsertId();
                         if(!empty($data['Holiday']))
                             $this->setHolidayInformation($data['Holiday']);
+                        if(!empty($data['Workinghours']))
+                            $this->setWorkingHours($data['Workinghours']);
                         $restaurantDetails = $this->Restaurant->find('first',array('conditions'=>array('Restaurant.id'=>$lastRestaurantId)));
                         
                         $result['success'] = 1;
@@ -279,7 +283,7 @@ class QlistAdminsController extends AppController {
             $data['country'] = !empty($this->params['data']['country']) ? $this->params['data']['country'] : "US";
             if($this->Holiday->save($data)){
                 $result['success'] = 1;
-                if(!empty($data['Holiday']['id']))
+                if(!empty($data['id']))
                     $result['message'] = "Holiday updated to the calendar.";
                 else
                     $result['message'] = "Holiday added to the your calendar.";
@@ -290,6 +294,41 @@ class QlistAdminsController extends AppController {
         $this->set(compact("result"));
         $this->render("default");
     }    
+    
+    /********************************************************
+     * Action Name : setWorkingHours                        *
+     * Purpose     : Used to save restaurant working hours. *
+     * Created By  : Sivaraj S                              *
+     ********************************************************/
+    public function setWorkingHours($paramData=null){
+        $result['success'] = 0;
+        $result['message'] = "No data found";
+        
+        if($paramData != null){
+            $data = $paramData;
+            foreach($data as $workinghour){
+                $this->Workinghours->create();
+                $this->Workinghours->save($workinghour);
+            }
+            $result['success'] = 1;
+            $result['message'] = "Working hours added for your restaurant.";
+        }else{        
+            $data = !empty($this->params['data']['working_hours']) ? $this->params['data']['working_hours'] : "";
+            if(!empty($data)){
+                foreach($data as $workinghour){
+                    if(empty($data['id']))
+                        $this->Workinghours->create();
+                    $this->Workinghours->save($workinghour);
+                }
+                $result['success'] = 1;
+                $result['message'] = "Working hours set for your restaurant.";
+            }else{
+                $result['message'] = "Some details missing.";
+            }
+        }
+        $this->set(compact("result"));
+        $this->render("default");
+    }
         
     /*****************************************************
      * Action Name : getRestaurantDetails                *
