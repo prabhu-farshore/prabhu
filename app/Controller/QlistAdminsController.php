@@ -54,16 +54,8 @@ class QlistAdminsController extends AppController {
         $data['Restaurant']['contact_person'] = !empty($this->params['data']['contact_person']) ? $this->params['data']['contact_person'] : "FSP admin";
         $data['Restaurant']['phone'] = !empty($this->params['data']['phone']) ? $this->params['data']['phone'] : "1456939872";
         $data['Restaurant']['address'] = !empty($this->params['data']['address']) ? $this->params['data']['address'] : "Madurai, Tamilnadu";
-        $data['Restaurant']['2_top_avg_time'] = !empty($this->params['data']['2_top_avg_time']) ? $this->params['data']['2_top_avg_time'] : "";
-        $data['Restaurant']['4_top_avg_time'] = !empty($this->params['data']['4_top_avg_time']) ? $this->params['data']['4_top_avg_time'] : "";
-        $data['Restaurant']['6_top_avg_time'] = !empty($this->params['data']['6_top_avg_time']) ? $this->params['data']['6_top_avg_time'] : "";
-        $data['Restaurant']['allow_6_top_remote'] = !empty($this->params['data']['allow_6_top_remote']) ? $this->params['data']['allow_6_top_remote'] : "";
-        
-        $data['Holiday'] = array(0=>array('restaurant_id' => "1",'date' => date('Y-m-d'),'holiday_name'=>"Workers day",'country'=>'US'),
-                                1=>array('restaurant_id' => "1",'date' => date('Y-m-d'),'holiday_name'=>"Workers day",'country'=>'USA'),
-                                2=>array('restaurant_id' => "1",'date' => date('Y-m-d'),'holiday_name'=>"Workers day",'country'=>'UK'));
-        
-//        $data['Holiday'] = !empty($this->params['data']['holidays']) ? $this->params['data']['holidays'] : "";
+
+        $data['Holiday'] = !empty($this->params['data']['holidays']) ? $this->params['data']['holidays'] : "";
         
         $data['Restaurant'] = array_filter($data['Restaurant']);
         $data['Holiday'] = array_filter($data['Holiday']);
@@ -214,7 +206,7 @@ class QlistAdminsController extends AppController {
             $restaurantExists = $this->Restaurant->find('first',array('conditions'=>array('Restaurant.id'=>$data['Restaurant']['id'])));
             $result['response'] = $restaurantExists;
             if(!empty($restaurantExists)){
-                    $result = $this->updateRestaurantInfo($data,$restaurantExists);
+                $result = $this->updateRestaurantInfo($data,$restaurantExists);
             }else{
                 $result['message'] = "Restaurant doesn't exist in Q application.";
             }
