@@ -289,8 +289,7 @@ class QlistAdminsController extends AppController {
         }
         $this->set(compact("result"));
         $this->render("default");
-    }
-    
+    }    
         
     /*****************************************************
      * Action Name : getRestaurantDetails                *
@@ -315,7 +314,12 @@ class QlistAdminsController extends AppController {
         $this->set(compact("result"));
         $this->render("default");
     }
-    
+            
+    /*******************************************************
+     * Action Name : getNationalHolidays                   *
+     * Purpose     : Used to get list of national holiday. *
+     * Created By  : Sivaraj S                             *
+     *******************************************************/
     public function getNationalHolidays(){
         $result['success'] = 1;
         $nationalHolidays = $this->Holiday->find('all',array('conditions'=>array('restaurant_id'=>0,'state'=>'closed'),
