@@ -273,25 +273,27 @@ class QlistAdminsController extends AppController {
         
         if($paramData != null){
             $data = $paramData;
-        }else{        
-            $data['id'] = !empty($this->params['data']['holiday_id']) ? $this->params['data']['holiday_id'] : "1";
-            $data['restaurant_id'] = !empty($this->params['data']['restaurant_id']) ? $this->params['data']['restaurant_id'] : "1";
-            $data['date'] = !empty($this->params['data']['date']) ? $this->params['data']['date'] : date('Y-m-d');
-            $data['holiday_name'] = !empty($this->params['data']['holiday_name']) ? $this->params['data']['holiday_name'] : "Workers day";
-            $data['country'] = !empty($this->params['data']['country']) ? $this->params['data']['country'] : "US";
-        }
-        if(!empty($data)){
             foreach($data as $holiday){
                 $this->Holiday->create();
                 $this->Holiday->save($holiday);
             }
             $result['success'] = 1;
-            if(!empty($data['Holiday']['id']))
-                $result['message'] = "Holiday updated to the calendar.";
-            else
-                $result['message'] = "Holiday added to the your calendar.";
-        }else{
-            $result['message'] = "Some holiday details missing.";
+            $result['message'] = "Holiday added to the your calendar.";
+        }else{        
+            $data['id'] = !empty($this->params['data']['holiday_id']) ? $this->params['data']['holiday_id'] : "";
+            $data['restaurant_id'] = !empty($this->params['data']['restaurant_id']) ? $this->params['data']['restaurant_id'] : "1";
+            $data['date'] = !empty($this->params['data']['date']) ? $this->params['data']['date'] : date('Y-m-d');
+            $data['holiday_name'] = !empty($this->params['data']['holiday_name']) ? $this->params['data']['holiday_name'] : "Workers day";
+            $data['country'] = !empty($this->params['data']['country']) ? $this->params['data']['country'] : "US";
+            if($this->Holiday->save($data)){
+                $result['success'] = 1;
+                if(!empty($data['Holiday']['id']))
+                    $result['message'] = "Holiday updated to the calendar.";
+                else
+                    $result['message'] = "Holiday added to the your calendar.";
+            }else{
+                $result['message'] = "Some holiday details missing.";
+            }
         }
         $this->set(compact("result"));
         $this->render("default");
