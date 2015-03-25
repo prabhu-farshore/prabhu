@@ -59,11 +59,8 @@ class QlistAdminsController extends AppController {
         $data['Holiday'] = !empty($this->params['data']['holidays']) ? $this->params['data']['holidays'] : "";
         $data['Workinghours'] = !empty($this->params['data']['working_hours']) ? $this->params['data']['working_hours'] : "";
         
-        $data['Restaurant'] = array_filter($data['Restaurant']);
-        $data['Holiday'] = array_filter($data['Holiday']);
-        $data['Workinghours'] = array_filter($data['Workinghours']);
-        
         if(!empty($data['Restaurant']['device_id'])){
+            $data['Restaurant'] = array_filter($data['Restaurant']);
             $restaurantExists = $this->Restaurant->find('first',array('conditions'=>array('restaurant_name'=>$data['Restaurant']['restaurant_name'],
                                                                                           'phone'=>$data['Restaurant']['phone'])));
             if(empty($restaurantExists)){
@@ -75,10 +72,14 @@ class QlistAdminsController extends AppController {
                     $data['Restaurant']['longitude'] = $latitudeLongtitude[1];
                     if($this->Restaurant->save($data['Restaurant'])){
                         $lastRestaurantId = $this->Restaurant->getLastInsertId();
-                        if(!empty($data['Holiday']))
+                        if(!empty($data['Holiday'])){
+                            $data['Holiday'] = array_filter($data['Holiday']);
                             $this->setHolidayInformation($data['Holiday'],$lastRestaurantId);
-                        if(!empty($data['Workinghours']))
+                        }
+                        if(!empty($data['Workinghours'])){
+                            $data['Workinghours'] = array_filter($data['Workinghours']);
                             $this->setWorkingHours($data['Workinghours'],$lastRestaurantId);
+                        }
                         $restaurantDetails = $this->Restaurant->find('first',array('conditions'=>array('Restaurant.id'=>$lastRestaurantId)));
                         
                         $result['success'] = 1;
@@ -206,9 +207,9 @@ class QlistAdminsController extends AppController {
         $data['Restaurant']['6_top_avg_time'] = !empty($this->params['data']['6_top_avg_time']) ? $this->params['data']['6_top_avg_time'] : "";
         $data['Restaurant']['allow_6_top_remote'] = !empty($this->params['data']['allow_6_top_remote']) ? $this->params['data']['allow_6_top_remote'] : "";
         $data['Restaurant']['stop_seating_time'] = !empty($this->params['data']['stop_seating_time']) ? $this->params['data']['stop_seating_time'] : "";
-        $data['Restaurant'] = array_filter($data['Restaurant']);
         
-        if(!empty($data['Restaurant']['id'])){
+        if(!empty($data['Restaurant']['id'])){        
+            $data['Restaurant'] = array_filter($data['Restaurant']);
             $restaurantExists = $this->Restaurant->find('first',array('conditions'=>array('Restaurant.id'=>$data['Restaurant']['id'])));
             $result['response'] = $restaurantExists;
             if(!empty($restaurantExists)){
