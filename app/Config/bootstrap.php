@@ -116,7 +116,7 @@ CakeLog::config('error', array(
 
 /**** Brain tree configuration ****/
 $root = realpath($_SERVER["DOCUMENT_ROOT"]);
-include "$root/app/Vendor/braintree/lib/Braintree.php";
+include "$root/Qwaitlist/app/Vendor/braintree/lib/Braintree.php";
 Braintree_Configuration::environment('sandbox');
 Braintree_Configuration::merchantId('yzj3txx8gmf4cn2c');
 Braintree_Configuration::publicKey('2rw78gf8z8sfr4k4');

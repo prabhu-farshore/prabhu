@@ -86,7 +86,7 @@ class QlistUsersController extends AppController {
         $data['Guest']['email']=isset($this->params['data']['email']) ? $this->params['data']['email'] : 'dina@mail.com';
         $data['Guest']['password']=isset($this->params['data']['password']) ? $this->params['data']['password'] : 'go';
         $data['Guest']['phone']=isset($this->params['data']['phone']) ? $this->params['data']['phone'] : '12121212';
-        
+        $data['Guest']['device_id']=isset($this->params['data']['device_id']) ? $this->params['data']['device_id'] : '';
          $data['Guest']['password']=$this->hash_password($data['Guest']['password']);
             $result['success'] = 0;
             $result['message'] = "Registration failed";
@@ -150,11 +150,33 @@ class QlistUsersController extends AppController {
     public function searchByCities() {
         $result['success'] = 0;
         $result['message'] = "Not found";
-        $searchTxt = isset($this->params['data']['search_text']) ? $this->params['data']['search_text'] : '';
-        $city = isset($this->params['data']['city']) ? $this->params['data']['city'] : '';
+        $searchTxt = isset($this->params['data']['search_text']) ? $this->params['data']['search_text'] : 'my';
+        $city = isset($this->params['data']['city']) ? $this->params['data']['city'] : 'TUCSON';
         if(!empty($searchTxt) && !empty($city)){
-           // $restaurantList = $this->Restaurant->find('all',array('conditions'=>array('restaurant_name LIKE'=>'%'.$sear chTxt.'%','address LIKE'=>'%'.$city.'%'))
+           $restaurantList = $this->Restaurant->find('all',array('conditions'=>array('restaurant_name LIKE'=>'%'.$searchTxt.'%','city'=>$city)));
+           $result['success'] = 1;
+           $result['message'] = "Restaurant list based on distance.";
+           $restaurantList = Set::classicExtract($restaurantList, '{n}.Restaurant');
+           $result['response']['Restaurants'] = $restaurantList;
         }
+        $this->set(compact('result'));
+        $this->render('default');
+    }
+    
+    public function searchByCities() {
+        $result['success'] = 0;
+        $result['message'] = "Not found";
+        $searchTxt = isset($this->params['data']['search_text']) ? $this->params['data']['search_text'] : 'my';
+        $city = isset($this->params['data']['city']) ? $this->params['data']['city'] : 'TUCSON';
+        if(!empty($searchTxt) && !empty($city)){
+           $restaurantList = $this->Restaurant->find('all',array('conditions'=>array('restaurant_name LIKE'=>'%'.$searchTxt.'%','city'=>$city)));
+           $result['success'] = 1;
+           $result['message'] = "Restaurant list based on distance.";
+           $restaurantList = Set::classicExtract($restaurantList, '{n}.Restaurant');
+           $result['response']['Restaurants'] = $restaurantList;
+        }
+        $this->set(compact('result'));
+        $this->render('default');
     }
 }
 ?>
