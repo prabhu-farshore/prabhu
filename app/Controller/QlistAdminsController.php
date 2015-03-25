@@ -54,7 +54,8 @@ class QlistAdminsController extends AppController {
         $data['Restaurant']['contact_person'] = !empty($this->params['data']['contact_person']) ? $this->params['data']['contact_person'] : "";
         $data['Restaurant']['phone'] = !empty($this->params['data']['phone']) ? $this->params['data']['phone'] : "";
         $data['Restaurant']['address'] = !empty($this->params['data']['address']) ? $this->params['data']['address'] : "";
-
+        $data['Restaurant']['city'] = !empty($this->params['data']['city']) ? $this->params['data']['city'] : "";
+        
         $data['Holiday'] = !empty($this->params['data']['holidays']) ? $this->params['data']['holidays'] : "";
         $data['Workinghours'] = !empty($this->params['data']['working_hours']) ? $this->params['data']['working_hours'] : "";
         
@@ -199,6 +200,7 @@ class QlistAdminsController extends AppController {
         $data['Restaurant']['contact_person'] = !empty($this->params['data']['contact_person']) ? $this->params['data']['contact_person'] : "";
         $data['Restaurant']['phone'] = !empty($this->params['data']['phone']) ? $this->params['data']['phone'] : "";
         $data['Restaurant']['address'] = !empty($this->params['data']['address']) ? $this->params['data']['address'] : "";
+        $data['Restaurant']['city'] = !empty($this->params['data']['city']) ? $this->params['data']['city'] : "";
         $data['Restaurant']['2_top_avg_time'] = !empty($this->params['data']['2_top_avg_time']) ? $this->params['data']['2_top_avg_time'] : "";
         $data['Restaurant']['4_top_avg_time'] = !empty($this->params['data']['4_top_avg_time']) ? $this->params['data']['4_top_avg_time'] : "";
         $data['Restaurant']['6_top_avg_time'] = !empty($this->params['data']['6_top_avg_time']) ? $this->params['data']['6_top_avg_time'] : "";
