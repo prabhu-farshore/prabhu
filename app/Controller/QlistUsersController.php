@@ -135,7 +135,7 @@ class QlistUsersController extends AppController {
         $result['message'] = "Not found";
         $lat = isset($this->params['data']['latitude']) ? $this->params['data']['latitude'] : '32.239551';
         $lng = isset($this->params['data']['longitude']) ? $this->params['data']['longitude'] : '-110.96496';
-        if (isset($this->params['data']['latitude']) && !empty($this->params['data']['latitude'])) {
+        if (!empty($this->params['data']['latitude']) && !empty($this->params['data']['longitude'])) {
             $this->Restaurant->virtualFields = array('distance' => "( 3959 * acos( cos( radians($lat) ) * cos( radians( Restaurant.latitude ) ) * cos( radians( Restaurant.longitude ) - radians($lng) ) + sin( radians($lat) ) * sin( radians( Restaurant.latitude ) ) ) )");
             $restaurantList = $this->Restaurant->find('list', array('fields' => array('Restaurant.city'), 'conditions' => array('Restaurant.distance <' => 1000), 'order' => array('Restaurant.distance ASC'),'group'=>array('Restaurant.city')));
             $result['success'] = 1;
