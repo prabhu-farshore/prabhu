@@ -275,8 +275,7 @@ class QlistAdminsController extends AppController {
                 $this->Holiday->create();
                 $this->Holiday->save($holiday);
             }
-            $result['success'] = 1;
-            $result['message'] = "Holiday added to the your calendar.";
+            return true;
         }else{        
             $data['id'] = !empty($this->params['data']['holiday_id']) ? $this->params['data']['holiday_id'] : "";
             $data['restaurant_id'] = !empty($this->params['data']['restaurant_id']) ? $this->params['data']['restaurant_id'] : "1";
@@ -285,16 +284,18 @@ class QlistAdminsController extends AppController {
             $data['country'] = !empty($this->params['data']['country']) ? $this->params['data']['country'] : "US";
             if($this->Holiday->save($data)){
                 $result['success'] = 1;
-                if(!empty($data['id']))
+                if(!empty($data['id'])){
+                    $result['response'] = $this->Holiday->find('first',array('conditions'=>array('Holiday.id'=>$data['id'])));
                     $result['message'] = "Holiday updated to the calendar.";
-                else
+                }else{
                     $result['message'] = "Holiday added to the your calendar.";
+                }
             }else{
                 $result['message'] = "Some holiday details missing.";
             }
+            $this->set(compact("result"));
+            $this->render("default");
         }
-        $this->set(compact("result"));
-        $this->render("default");
     }    
     
     /********************************************************
@@ -312,8 +313,7 @@ class QlistAdminsController extends AppController {
                 $this->Workinghours->create();
                 $this->Workinghours->save($workinghour);
             }
-            $result['success'] = 1;
-            $result['message'] = "Working hours added for your restaurant.";
+            return true;
         }else{        
             $data = !empty($this->params['data']['working_hours']) ? $this->params['data']['working_hours'] : "";
             if(!empty($data)){
@@ -322,14 +322,15 @@ class QlistAdminsController extends AppController {
                         $this->Workinghours->create();
                     $this->Workinghours->save($workinghour);
                 }
+                $result['response'] = $this->Workinghours->find('all',array('conditions'=>array('Workinghours.restaurant_id'=>$workinghour['restaurant_id'])));
                 $result['success'] = 1;
                 $result['message'] = "Working hours set for your restaurant.";
             }else{
                 $result['message'] = "Some details missing.";
             }
+            $this->set(compact("result"));
+            $this->render("default");
         }
-        $this->set(compact("result"));
-        $this->render("default");
     }
         
     /*****************************************************
