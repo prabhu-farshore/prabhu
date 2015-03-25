@@ -76,9 +76,9 @@ class QlistAdminsController extends AppController {
                     if($this->Restaurant->save($data['Restaurant'])){
                         $lastRestaurantId = $this->Restaurant->getLastInsertId();
                         if(!empty($data['Holiday']))
-                            $this->setHolidayInformation($data['Holiday']);
+                            $this->setHolidayInformation($data['Holiday'],$lastRestaurantId);
                         if(!empty($data['Workinghours']))
-                            $this->setWorkingHours($data['Workinghours']);
+                            $this->setWorkingHours($data['Workinghours'],$lastRestaurantId);
                         $restaurantDetails = $this->Restaurant->find('first',array('conditions'=>array('Restaurant.id'=>$lastRestaurantId)));
                         
                         $result['success'] = 1;
@@ -265,13 +265,14 @@ class QlistAdminsController extends AppController {
      * Purpose     : Used to save restaurant information. *
      * Created By  : Sivaraj S                            *
      ******************************************************/
-    public function setHolidayInformation($paramData = null){        
+    public function setHolidayInformation($paramData = null,$restaurant_id = null){        
         $result['success'] = 0;
         $result['message'] = "No data found";
         
         if($paramData != null){
             $data = $paramData;
             foreach($data as $holiday){
+                $holiday['restaurant_id'] = $restaurant_id;
                 $this->Holiday->create();
                 $this->Holiday->save($holiday);
             }
@@ -303,13 +304,14 @@ class QlistAdminsController extends AppController {
      * Purpose     : Used to save restaurant working hours. *
      * Created By  : Sivaraj S                              *
      ********************************************************/
-    public function setWorkingHours($paramData=null){
+    public function setWorkingHours($paramData = null,$restaurant_id = null){
         $result['success'] = 0;
         $result['message'] = "No data found";
         
         if($paramData != null){
             $data = $paramData;
             foreach($data as $workinghour){
+                $workinghour['restaurant_id'] = $restaurant_id;
                 $this->Workinghours->create();
                 $this->Workinghours->save($workinghour);
             }
