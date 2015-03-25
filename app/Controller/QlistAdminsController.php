@@ -47,13 +47,13 @@ class QlistAdminsController extends AppController {
         $result['success'] = 0;
         $result['message'] = "No data found";
         
-        $data['Restaurant']['device_id'] = !empty($this->params['data']['device_id']) ? $this->params['data']['device_id'] : "test_device_id";
-        $data['Restaurant']['email'] = !empty($this->params['data']['email']) ? $this->params['data']['email'] : "FSP@qtest.com";
-        $data['Restaurant']['password'] = !empty($this->params['data']['password']) ? $this->params['data']['password'] : "password";
-        $data['Restaurant']['restaurant_name'] = !empty($this->params['data']['restaurant_name']) ? $this->params['data']['restaurant_name'] : "FSPs";
-        $data['Restaurant']['contact_person'] = !empty($this->params['data']['contact_person']) ? $this->params['data']['contact_person'] : "FSP admin";
-        $data['Restaurant']['phone'] = !empty($this->params['data']['phone']) ? $this->params['data']['phone'] : "1456939872";
-        $data['Restaurant']['address'] = !empty($this->params['data']['address']) ? $this->params['data']['address'] : "Madurai, Tamilnadu";
+        $data['Restaurant']['device_id'] = !empty($this->params['data']['device_id']) ? $this->params['data']['device_id'] : "";
+        $data['Restaurant']['email'] = !empty($this->params['data']['email']) ? $this->params['data']['email'] : "";
+        $data['Restaurant']['password'] = !empty($this->params['data']['password']) ? $this->params['data']['password'] : "";
+        $data['Restaurant']['restaurant_name'] = !empty($this->params['data']['restaurant_name']) ? $this->params['data']['restaurant_name'] : "";
+        $data['Restaurant']['contact_person'] = !empty($this->params['data']['contact_person']) ? $this->params['data']['contact_person'] : "";
+        $data['Restaurant']['phone'] = !empty($this->params['data']['phone']) ? $this->params['data']['phone'] : "";
+        $data['Restaurant']['address'] = !empty($this->params['data']['address']) ? $this->params['data']['address'] : "";
 
         $data['Holiday'] = !empty($this->params['data']['holidays']) ? $this->params['data']['holidays'] : "";
         $data['Workinghours'] = !empty($this->params['data']['working_hours']) ? $this->params['data']['working_hours'] : "";
@@ -105,11 +105,11 @@ class QlistAdminsController extends AppController {
         $result['success'] = 0;
         $result['message'] = "No data found";
         
-        $data['Restaurant']['device_id'] = !empty($this->params['data']['device_id']) ? $this->params['data']['device_id'] : "test_device_id";
-        $data['Restaurant']['email'] = !empty($this->params['data']['email']) ? $this->params['data']['email'] : "static_email@qtest.com";
-        $data['Restaurant']['password'] = !empty($this->params['data']['password']) ? $this->params['data']['password'] : "password";
-        $data['Restaurant']['phone'] = !empty($this->params['data']['phone']) ? $this->params['data']['phone'] : "1234567890";
-        $data['Restaurant']['address'] = !empty($this->params['data']['address']) ? $this->params['data']['address'] : "0";
+        $data['Restaurant']['device_id'] = !empty($this->params['data']['device_id']) ? $this->params['data']['device_id'] : "";
+        $data['Restaurant']['email'] = !empty($this->params['data']['email']) ? $this->params['data']['email'] : "";
+        $data['Restaurant']['password'] = !empty($this->params['data']['password']) ? $this->params['data']['password'] : "";
+        $data['Restaurant']['phone'] = !empty($this->params['data']['phone']) ? $this->params['data']['phone'] : "";
+        $data['Restaurant']['address'] = !empty($this->params['data']['address']) ? $this->params['data']['address'] : "";
         if(!empty($data['Restaurant']['phone'])){
             $hashedPassword = sha1($data['Restaurant']['password']);
             $restaurantDetails = $this->Restaurant->find('first',array('conditions'=>array('email'=>$data['Restaurant']['email'],
@@ -200,10 +200,10 @@ class QlistAdminsController extends AppController {
         $data['Restaurant']['phone'] = !empty($this->params['data']['phone']) ? $this->params['data']['phone'] : "";
         $data['Restaurant']['address'] = !empty($this->params['data']['address']) ? $this->params['data']['address'] : "";
         $data['Restaurant']['2_top_avg_time'] = !empty($this->params['data']['2_top_avg_time']) ? $this->params['data']['2_top_avg_time'] : "";
-        $data['Restaurant']['4_top_avg_time'] = !empty($this->params['data']['4_top_avg_time']) ? $this->params['data']['4_top_avg_time'] : "00:00:30";
+        $data['Restaurant']['4_top_avg_time'] = !empty($this->params['data']['4_top_avg_time']) ? $this->params['data']['4_top_avg_time'] : "";
         $data['Restaurant']['6_top_avg_time'] = !empty($this->params['data']['6_top_avg_time']) ? $this->params['data']['6_top_avg_time'] : "";
         $data['Restaurant']['allow_6_top_remote'] = !empty($this->params['data']['allow_6_top_remote']) ? $this->params['data']['allow_6_top_remote'] : "";
- 
+        $data['Restaurant']['stop_seating_time'] = !empty($this->params['data']['stop_seating_time']) ? $this->params['data']['stop_seating_time'] : "";
         $data['Restaurant'] = array_filter($data['Restaurant']);
         
         if(!empty($data['Restaurant']['id'])){
@@ -278,8 +278,8 @@ class QlistAdminsController extends AppController {
         }else{        
             $data['id'] = !empty($this->params['data']['holiday_id']) ? $this->params['data']['holiday_id'] : "";
             $data['restaurant_id'] = !empty($this->params['data']['restaurant_id']) ? $this->params['data']['restaurant_id'] : "1";
-            $data['date'] = !empty($this->params['data']['date']) ? $this->params['data']['date'] : date('Y-m-d');
-            $data['holiday_name'] = !empty($this->params['data']['holiday_name']) ? $this->params['data']['holiday_name'] : "Workers day";
+            $data['date'] = !empty($this->params['data']['date']) ? $this->params['data']['date'] : "";
+            $data['holiday_name'] = !empty($this->params['data']['holiday_name']) ? $this->params['data']['holiday_name'] : "";
             $data['country'] = !empty($this->params['data']['country']) ? $this->params['data']['country'] : "US";
             if($this->Holiday->save($data)){
                 $result['success'] = 1;
