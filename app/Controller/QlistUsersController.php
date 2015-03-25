@@ -162,7 +162,6 @@ class QlistUsersController extends AppController {
         $this->set(compact('result'));
         $this->render('default');
     }
-    
 }
 ?>
 
