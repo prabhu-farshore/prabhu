@@ -148,6 +148,7 @@ class QlistUsersController extends AppController {
     }
     
     public function searchByCities() {
+        
         $result['success'] = 0;
         $result['message'] = "Not found";
         $searchTxt = isset($this->params['data']['search_text']) ? $this->params['data']['search_text'] : 'my';
