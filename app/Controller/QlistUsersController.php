@@ -163,21 +163,6 @@ class QlistUsersController extends AppController {
         $this->render('default');
     }
     
-    public function searchByCities() {
-        $result['success'] = 0;
-        $result['message'] = "Not found";
-        $searchTxt = isset($this->params['data']['search_text']) ? $this->params['data']['search_text'] : 'my';
-        $city = isset($this->params['data']['city']) ? $this->params['data']['city'] : 'TUCSON';
-        if(!empty($searchTxt) && !empty($city)){
-           $restaurantList = $this->Restaurant->find('all',array('conditions'=>array('restaurant_name LIKE'=>'%'.$searchTxt.'%','city'=>$city)));
-           $result['success'] = 1;
-           $result['message'] = "Restaurant list based on distance.";
-           $restaurantList = Set::classicExtract($restaurantList, '{n}.Restaurant');
-           $result['response']['Restaurants'] = $restaurantList;
-        }
-        $this->set(compact('result'));
-        $this->render('default');
-    }
 }
 ?>
 
