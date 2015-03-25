@@ -135,22 +135,27 @@ class QlistUsersController extends AppController {
         $result['message'] = "Not found";
         $lat = isset($this->params['data']['latitude']) ? $this->params['data']['latitude'] : '32.239551';
         $lng = isset($this->params['data']['longitude']) ? $this->params['data']['longitude'] : '-110.96496';
-        if (isset($this->params['data']['latitude']) && !empty($this->params['data']['latitude'])) {
+        if (!empty($this->params['data']['latitude']) && !empty($this->params['data']['longitude'])) {
             $this->Restaurant->virtualFields = array('distance' => "( 3959 * acos( cos( radians($lat) ) * cos( radians( Restaurant.latitude ) ) * cos( radians( Restaurant.longitude ) - radians($lng) ) + sin( radians($lat) ) * sin( radians( Restaurant.latitude ) ) ) )");
-            $restaurantList = $this->Restaurant->find('list', array('fields' => array('Restaurant.address'), 'conditions' => array('Restaurant.distance <' => 1000), 'order' => array('Restaurant.distance ASC')));
+            $restaurantList = $this->Restaurant->find('list', array('fields' => array('Restaurant.city'), 'conditions' => array('Restaurant.distance <' => 1000), 'order' => array('Restaurant.distance ASC'),'group'=>array('Restaurant.city')));
             $result['success'] = 1;
             $result['message'] = "Cities list based on distance.";
-            //$restaurantList = Set::classicExtract($restaurantList, '{n}.Restaurant');
-            foreach($restaurantList as $val){
-                $strArr=  explode(" ", $val);
-                $getPos=count($strArr)-4;
-                $key=$strArr[$getPos];
-                if(in_array($key,$strArr))
-                    $result['response']['Cities'][]=$strArr[$getPos];
-            }
+            $restaurantList = Set::classicExtract($restaurantList, '{n}');
+            $result['response']['Cities'] = $restaurantList;
         }
         $this->set(compact('result'));
         $this->render('default');
     }
+    
+    public function searchByCities() {
+        $result['success'] = 0;
+        $result['message'] = "Not found";
+        $searchTxt = isset($this->params['data']['search_text']) ? $this->params['data']['search_text'] : '';
+        $city = isset($this->params['data']['city']) ? $this->params['data']['city'] : '';
+        if(!empty($searchTxt) && !empty($city)){
+           // $restaurantList = $this->Restaurant->find('all',array('conditions'=>array('restaurant_name LIKE'=>'%'.$sear chTxt.'%','address LIKE'=>'%'.$city.'%'))
+        }
+    }
 }
 ?>
+
