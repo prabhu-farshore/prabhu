@@ -153,7 +153,9 @@ class QlistUsersController extends AppController {
         $result['message'] = "Not found";
         $searchTxt = isset($this->params['data']['search_text']) ? $this->params['data']['search_text'] : 'my';
         $city = isset($this->params['data']['city']) ? $this->params['data']['city'] : 'TUCSON';
+        $partySize = isset($this->params['data']['party_size']) ? $this->params['data']['party_size'] : '2';
         if(!empty($searchTxt) && !empty($city)){
+           $this->Restaurant->virtualFields = array('new_restuarant' => "DATEDIFF(NOW(),Restaurant.created) <= 30",'Qtime' => '1.50');
            $restaurantList = $this->Restaurant->find('all',array('conditions'=>array('restaurant_name LIKE'=>'%'.$searchTxt.'%','city'=>$city)));
            $result['success'] = 1;
            $result['message'] = "Restaurant list based on distance.";
