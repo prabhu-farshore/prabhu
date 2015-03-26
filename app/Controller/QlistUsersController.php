@@ -157,10 +157,14 @@ class QlistUsersController extends AppController {
         if(!empty($searchTxt) && !empty($city)){
            $this->Restaurant->virtualFields = array('new_restuarant' => "DATEDIFF(NOW(),Restaurant.created) <= 30",'Qtime' => '1.50');
            $restaurantList = $this->Restaurant->find('all',array('conditions'=>array('restaurant_name LIKE'=>'%'.$searchTxt.'%','city'=>$city)));
-           $result['success'] = 1;
-           $result['message'] = "Restaurant list based on distance.";
-           $restaurantList = Set::classicExtract($restaurantList, '{n}.Restaurant');
-           $result['response']['Restaurants'] = $restaurantList;
+           $result['success'] = 0;
+           $result['message'] = "No results found";
+           if (!empty($restaurantList)) {
+                $result['success'] = 1;
+                $result['message'] = "Restaurant list based on distance.";
+                $restaurantList = Set::classicExtract($restaurantList, '{n}.Restaurant');
+                $result['response']['Restaurants'] = $restaurantList;
+            }
         }
         $this->set(compact('result'));
         $this->render('default');
