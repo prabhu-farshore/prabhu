@@ -1,4 +1,4 @@
-modiying the file1
+modiying the file2
 <?php
 /**
  * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
