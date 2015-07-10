@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 changing to 2
+=======
+changing to 1
+>>>>>>> d68b983... changing to 1
 <?php
 /**
  * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
