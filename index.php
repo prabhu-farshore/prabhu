@@ -1,4 +1,4 @@
-mod 2
+mod 3
 <?php
 /**
  * Requests collector.
